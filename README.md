@@ -30,6 +30,17 @@ The `Player` class represents a player in the game. It includes attributes for t
 
 The `PlayerHand` class represents a player's hand, including the initial two cards and the community cards (flop, turn, and river). It includes methods to add cards to the hand and retrieve the current hand for evaluation.
 
+## TODOs
+
+- Add a card handler to determine and show the actual card values.
+- Implement the logic to deal cards to players.
+- Implement the first round of betting.
+- Implement subsequent betting rounds (flop, turn, river).
+- Determine the winning hand based on poker hand rankings.
+- Add functionality to reshuffle the deck and change the dealer.
+- Improve the efficiency of checking player hand status.
+- Enhance the user interface for better interaction and display of game status.
+
 ## How to Run
 
 1. Compile the Java files:
