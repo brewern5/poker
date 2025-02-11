@@ -11,17 +11,57 @@ public class PlayerHand {
 
     public ArrayList<Card> playerHand;
 
-    // These are the cards that are dealt to the player
-    public Card firstPlayerCard;
-    public Card secondPlayerCard;
+    public ArrayList<Card> checkPlayerHand = new ArrayList<>();
 
-    public Card firstFlopCard;
-    public Card secondFlopCard;
-    public Card thirdFlopCard;
+    public ArrayList<Card> bestHand = new ArrayList<>();
 
-    public Card turnCard;
+    /*
+     *  The first thing that will be checked in the hand will be the flush,
+     *  as it is the easiest check to make and also will be the first to 
+     *  elimanate future checks for pairs (as if you have a flush hands that 
+     *  require a minimum of pairs, will either not be possible because 
+     *      1.  3 of a kind, fullhouse, as you cannot get these if you have 
+     *          a flush.)
+     * 
+     *      2. The hands will be inferior to the your flush.
+     * 
+     *  Second will be the straight as (it is a little harder to check for
+     *  is also a major component to the 2 highest conditions, and the 
+     *  same logic of pair based hands that applied for flushes also applies
+     *  for straights)
+     * 
+     *  Third will be the pair based hands as they are the hardest to check for
+     *  and make up a majority of the winning hands. and it has the most in depth
+     *  checkign system
+     * 
+     *  All the these will be checked for each player every time a table card is 
+     *  flipped. If either the flush or the straight is checked for the player 
+     *  (except for table straights/flushes as every player has acess to them)
+     *  it will not check for pairs, 
+     */
+    
 
-    public Card riverCard;
+    public boolean hasStraightFlush = false;
+    
+    public boolean checkForFlush = true;
+    public boolean hasFlush = false;
+
+    public boolean checkForStraight = true;
+    public boolean hasStraight = false;
+
+    // These will turn false if a straight or flush is found, 
+    public boolean checkForPairs = true;
+    public boolean hasPair = false;
+
+    // This will turn true if a pair is found then children will turn on too (four of a kind)
+    public boolean checkForThree = false;
+    public boolean hasThree = false;
+
+    public boolean checkForFour = false;
+
+    // this will be the highest card in the hand (Ace will be handled diffreently since ace can be high and low)
+    public Card kicker;
+
 
     /*
      * 
@@ -33,25 +73,38 @@ public class PlayerHand {
 
     public PlayerHand(ArrayList<Card> playerHand){
         this.playerHand = playerHand;
+
+        // After the hand is initalized the kicker will be determined and then will check for potential matches to other conditions
+
+        //      Kicker/Pair determination
+        if(playerHand.get(0).getCardNum() > playerHand.get(1).getCardNum()){
+            kicker = playerHand.get(0);
+        }
+        else if(playerHand.get(0).getCardNum() < playerHand.get(1).getCardNum()){
+            kicker = playerHand.get(1);
+        }
+        else if(playerHand.get(0).getCardNum() == playerHand.get(1).getCardNum()){
+            kicker = playerHand.get(0);
+            hasPair = true;
+            bestHand.add(playerHand.get(0));
+            bestHand.add(playerHand.get(1));
+            checkForThree = true;
+        }
+
     }
 
     public void addFlopCards(ArrayList<Card> flopCards){
         for(Card flopCard : flopCards){
-            playerHand.add(flopCard);
+            checkPlayerHand.add(flopCard);
         }
-        firstFlopCard = playerHand.get(2);
-        secondFlopCard = playerHand.get(3);
-        thirdFlopCard = playerHand.get(4);
     }
 
     public void addTurnCard(Card turnCard){
-        playerHand.add(turnCard);
-        this.turnCard = turnCard;
+        checkPlayerHand.add(turnCard);
     }
 
     public void addRiverCard(Card riverCard){
-        playerHand.add(riverCard);
-        this.riverCard = riverCard;
+        checkPlayerHand.add(riverCard);
     }
 
     /*
@@ -63,7 +116,7 @@ public class PlayerHand {
      *          Retrieval Methods
      */
     public ArrayList<Card> getCheckCardList(){
-        return playerHand;
+        return checkPlayerHand;
     }
     /*
      *          End Retrieval Methods
@@ -76,7 +129,184 @@ public class PlayerHand {
 
     public void clearHand(){
         playerHand.clear();
+        checkPlayerHand.clear();
+        bestHand.clear();
+        // TODO: think about whether or not it should just instantiate a new 'PlayerHand'
     }
 
+    public ArrayList<Card> sortCardsHighToLow(ArrayList<Card> list){
+
+        // will need to keep the current size as the temp will store the cards sorted in order from highest to lowest
+        int size = list.size();
+
+        try{
+            for(int i = 0; i <= size ; i++){
+
+                Card highestCard = list.get(i);
+
+                    // Sorting the cards from highest to lowest
+                for(Card card : list){
+                    if(highestCard.getCardNum() < card.getCardNum()){
+                        if(highestCard.getCardNum() == card.getCardNum()){
+                            list.remove(card);
+                        }
+                        highestCard = card;
+                    }   
+                }
+                    
+                // remove the card and move it to the back of the list
+                list.add(highestCard);
+                list.remove(highestCard);
+            }
+        }catch(IndexOutOfBoundsException e){
+            
+        }
+
+        return list;
+    }
+
+    public boolean checkHandForFlush(){
+
+        int numOfCardsOfSameSuit = 0;
+
+        ArrayList<Card> temp = new ArrayList<>();
+
+        int lower = 0;
+        
+        if(playerHand.get(0).getSuit() == playerHand.get(1).getSuit()){
+            numOfCardsOfSameSuit = 2;
+            lower = 1;
+            for(Card card : playerHand){
+                temp.add(card);
+            }
+            
+        }
+        else if(checkPlayerHand.size() < 4){
+            return false;
+        }
+
+        System.out.println("Before main check loop: ");
+        for(Card card : temp){
+            System.out.println("    " + card.getCardString());
+        }
+        System.out.println();
+
+        System.out.println("PlayerHand");
+        for(Card card : playerHand){
+            System.out.print(" "+card.getCardString() + "   ");
+        }
+        System.out.println();
+
+        // this will be the hand card that is getting checked, if they are both the same suit only one will get checked
+        for(int handCard = lower; handCard < 2; handCard++){ 
+
+            Card firstCheckCard = playerHand.get(handCard);
+            temp.add(playerHand.get(handCard));
+
+            for(int tableCards = 0; tableCards < checkPlayerHand.size(); tableCards++){
+                
+                Card card = checkPlayerHand.get(tableCards);
+
+                if(firstCheckCard.getSuit() == card.getSuit()){
+                    if(firstCheckCard.getCardNum() == card.getCardNum()){
+
+                    }
+                    else{
+                        numOfCardsOfSameSuit++;
+                        temp.add(card);
+                    }
+                }
+            }
+            if(temp.size() < 5 || numOfCardsOfSameSuit < 5){
+                numOfCardsOfSameSuit = 0;
+                //System.out.println("temp Cleared");
+                
+                temp.clear();
+            }
+        }
+        if(numOfCardsOfSameSuit > 4){
+
+            temp = sortCardsHighToLow(temp);
+
+            for(Card card : temp){
+                System.out.print(card.getCardString() + "   ");
+            }
+            System.out.println();
+
+            //TODO: check for str8 flush
+            System.out.println("You have a flush!");
+            
+            if(temp.size() > 5){
+                for(int i = 0; i < 5; i++){
+                    bestHand.add(temp.get(i));
+                    System.out.print(" " + temp.get(i).getCardString() + "  ");
+                }
+                System.out.println();
+            }
+            checkForPairs = false;
+
+            return true;
+        }
+
+        /*  Debug
+        for(Card card : temp){
+            System.out.println(card.getCardString());
+        }
+        */
+        return false;
+    }
+
+    public boolean checkHandForStr8(){
+
+        ArrayList<Card> temp = new ArrayList<>();
+
+        temp = sortCardsHighToLow(temp);
+
+        boolean hasBestStr8 = false;
+
+        if(temp.size() > 5){
+
+            // Goes backwards to check the last 5 (lowest) cards first because if the 3rd and 4th aren't in order, no str8 will be possible
+            for(int highStr8Card = 2; highStr8Card > -1; highStr8Card--){
+                int firstCard = highStr8Card;
+                for(int i = 0; i < 4; i++){
+                    if(temp.get(firstCard).getCardNum() != temp.get(firstCard + 1).getCardNum()){
+                        if(highStr8Card == 2){
+                            checkForStraight = false;
+                            return false;
+                        } 
+                        break; 
+                    }
+                    else if(temp.get(firstCard).getCardNum() == temp.get(firstCard + 1).getCardNum()){
+                        firstCard++;
+                    }
+                    System.out.println(i);
+                }
+            }
+
+        }
+        else if(temp.size() == 5){
+
+        }
+        
+        if(hasBestStr8){ return true; }
+        return false;
+    }
+
+    public void checkCards(){
+
+        //checkPlayerHand = playerHand;
+
+        if(checkForFlush && !hasFlush){
+            hasFlush = checkHandForFlush();
+        }
+        else if(checkForStraight && !hasStraight){
+        
+            hasStraight = checkHandForStr8();
+    
+
+        }
+
+    }
 
 }
