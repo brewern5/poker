@@ -87,7 +87,7 @@ public class pokerGame {
      *          Absoulte game methods (Methods that will always be called)
      */
     public Card dealCards(){
-       // System.out.println("Cards left in the deck: " + gameDeck.getCardsLeftInDeck());
+        //System.out.println("Cards left in the deck: " + gameDeck.getCardsLeftInDeck());
         return gameDeck.getRandomCard(random.nextInt(gameDeck.getCardsLeftInDeck()));
     }
     public ArrayList<Card> theFlop(){
@@ -101,12 +101,12 @@ public class pokerGame {
         return flopCards;
     }
     public Card turn(){
-        Card trun = gameDeck.getRandomCard(gameDeck.getCardsLeftInDeck()+1);
+        Card turn = gameDeck.getRandomCard(random.nextInt(gameDeck.getCardsLeftInDeck()));
 
-        return trun;
+        return turn;
     }
     public Card river(){
-        Card river = gameDeck.getRandomCard(gameDeck.getCardsLeftInDeck()+1);
+        Card river = gameDeck.getRandomCard(random.nextInt(gameDeck.getCardsLeftInDeck()));
 
         return river;
     }
@@ -147,6 +147,10 @@ public class pokerGame {
 
         }
 
+    }
+
+    public void reshuffle(){
+        gameDeck = new Deck();
     }
 
     public void winningHand(){

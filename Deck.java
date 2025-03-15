@@ -7,13 +7,13 @@ import java.util.*;
 
 public class Deck {
 
-    public final ArrayList<Card> finalDeck = new ArrayList<>();
+    public ArrayList<Card> finalDeck = new ArrayList<>();
     public ArrayList<Card> playDeck = new ArrayList<>();
 
     // TODO Create a more effective storage system for cards that does not need to recreate the deck
     public Deck(){
         for(int suitNum = 1; suitNum < 5; suitNum++){
-            for(int cardNum = 1; cardNum < 14; cardNum++){
+            for(int cardNum = 2; cardNum < 15; cardNum++){
                 finalDeck.add(new Card(suitNum, cardNum));
             }
         }
@@ -36,9 +36,9 @@ public class Deck {
         return card;
     }
 
-    // Called when the game is over
-    public void reshuffle(){
-        playDeck = finalDeck;
+    public void printDeck(){
+        for(Card card : playDeck){
+            System.out.println(card.getCardString());
+        }
     }
-
 }

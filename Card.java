@@ -29,10 +29,7 @@ public class Card{
         String cardString = "";
 
         // Determining the card value
-        switch (cardNum){
-            case 1:
-                cardString += "Ace of ";
-                break;    
+        switch (cardNum){   
             case 2:
                 cardString += "Two of ";
                 break;
@@ -69,8 +66,9 @@ public class Card{
             case 13:
                 cardString += "King of ";
                 break;
-            default:
-                break;
+            case 14:
+                cardString += "Ace of ";
+                break; 
         }
 
         // Determining the suit
@@ -84,10 +82,8 @@ public class Card{
             case 3:
                 cardString += "Hearts";
                 break;
-            case 5:
+            case 4:
                 cardString += "Spades";
-                break;
-            default:
                 break;
         }
 
