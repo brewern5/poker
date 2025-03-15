@@ -70,15 +70,19 @@ public class pokerGame {
     public int getNumOfPlayers(){
         return numOfPlayers;
     }
+
     public int getBuyIn(){
         return buyIn;
     }
+
     public int getPlayerThatIsDealer(){
         return playerThatIsDealer;
     }
+
     public ArrayList<Player> getTotalPlayers(){
         return totalPlayers;
     }
+
     public ArrayList<Player> getCurrentPlayers(){
         return currentHandPlayers;
     }
@@ -90,6 +94,7 @@ public class pokerGame {
         //System.out.println("Cards left in the deck: " + gameDeck.getCardsLeftInDeck());
         return gameDeck.getRandomCard(random.nextInt(gameDeck.getCardsLeftInDeck()));
     }
+
     public ArrayList<Card> theFlop(){
 
         ArrayList<Card> flopCards = new ArrayList<Card>();
@@ -100,16 +105,19 @@ public class pokerGame {
 
         return flopCards;
     }
+
     public Card turn(){
         Card turn = gameDeck.getRandomCard(random.nextInt(gameDeck.getCardsLeftInDeck()));
 
         return turn;
     }
+
     public Card river(){
         Card river = gameDeck.getRandomCard(random.nextInt(gameDeck.getCardsLeftInDeck()));
 
         return river;
     }
+
     public void changeDealer(){
         if(playerThatIsDealer == (numOfPlayers-1)){
             playerThatIsDealer = 0;
@@ -125,10 +133,12 @@ public class pokerGame {
      *          Potential game methods
      */
 
+    //  Player folds their current hand and will play the next game
     public void fold(int playerNum){
         currentHandPlayers.remove(playerNum);
     }
 
+    //  Player has ran out of money and will be out of the game
     public void bust(int playerNum){
         totalPlayers.remove(playerNum);
     }
@@ -136,18 +146,6 @@ public class pokerGame {
     /*
      *          End-Game determination
      */
-
-    // will periodically check the players hand. This is certainly not the most effecient way to complete this
-    public void checkPlayerHandStatus(ArrayList<Card> playerHand){
-        
-        if(playerHand.size() == 5){
-            
-        }
-        else if(playerHand.size() > 5){
-
-        }
-
-    }
 
     public void reshuffle(){
         gameDeck = new Deck();

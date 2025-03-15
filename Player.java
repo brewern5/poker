@@ -26,6 +26,7 @@
         this.isDealer = isDealer;
     }
 
+
     /*
      *          Information Retrieval Methods
      */
@@ -33,32 +34,41 @@
     public int getCashNum(){
         return cash;
     }
+
     public ArrayList<Card> getCards(){
         return hand;
     }
+
     public ArrayList<Card> getCheckHand(){
         return checkHand.getCheckCardList();
     }
+
     public boolean getDealerStatus(){
         return isDealer;
     }
+
     public int getPlayerNum(){
         return playerNum;
     }
+
     public int getHandLength(){
         return hand.size();
     }
+
+
+
     /*
      *          Changer methods
      */
 
-
     public void changeDealerStatus(){
         isDealer = !isDealer;
     }
+
     public void getWinnings(int pot){
         cash += pot;
     }
+
 
     /*
      *          Game Methods 
@@ -68,23 +78,29 @@
         cash -= betNum;
         return betNum;
     }
+
     public void dealCards(Card card){
         hand.add(card);
     }
+
     // Called after all the cards are dealt
     public void createHand(){
         checkHand = new PlayerHand(hand);
         
     }
+    
     public void addFlopCards(ArrayList<Card> flopCards){
         checkHand.addFlopCards(flopCards);
     }
+
     public void addTurnCard(Card turnCard){
         checkHand.addTurnCard(turnCard);
     }
+
     public void addRiverCard(Card riverCard){
         checkHand.addRiverCard(riverCard);
     }
+    
     public void clearHand(){
         hand.clear();
         checkHand.clearHand();

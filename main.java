@@ -62,10 +62,13 @@ public class main {
                     in.nextLine();
                     firstRoundBetting = false;
                 }catch(InputMismatchException e){
-                    System.out.println("You need to enter a number!");
+                    System.out.println("\n \\\u001B[1m" + "You need to enter a number!" + "\\\u001B[0m \n");
+                    in.nextLine();
                 }
             }
             System.out.println();
+
+
             /*
              *          THE FLOP
              */
@@ -83,11 +86,11 @@ public class main {
                 player.addFlopCards(flopCards);
                 player.checkCards();
             }
-
             /*
              *          End Flop
              */
 
+            
             // TODO Second Round Betting
             System.out.println("Begin Second Round Betting!");
             boolean secondRoundBetting = true;
@@ -98,7 +101,8 @@ public class main {
                     in.nextLine();
                     secondRoundBetting = false;
                 }catch(InputMismatchException e){
-                    System.out.println("You need to enter a number!");
+                    System.out.println("\n \\\u001B[1m" + "You need to enter a number!" + "\\\u001B[0m \n");
+                    in.nextLine();
                 }
             }
             System.out.println();
@@ -140,7 +144,8 @@ public class main {
                     in.nextLine();
                     thirdRoundBetting = false;
                 }catch(InputMismatchException e){
-                    System.out.println("You need to enter a number!");
+                    System.out.println("\n \\\u001B[1m" + "You need to enter a number!" + "\\\u001B[0m \n");
+                    in.nextLine();
                 }
             }
             System.out.println();
@@ -178,12 +183,12 @@ public class main {
             while(finalRoundBetting){
                 System.out.print("    Place your bet: ");
                 try{
-                    //TODO: FIX Infinite loop in all betting stages
                     int playerBet = in.nextInt();
                     in.nextLine();
                     finalRoundBetting = false;
                 }catch(InputMismatchException e){
-                    System.out.println("You need to enter a number!");
+                    System.out.println("\n \\\u001B[1m" + "You need to enter a number!" + "\\\u001B[0m \n");
+                    in.nextLine();
                 }
             }
             System.out.println();
@@ -219,6 +224,16 @@ public class main {
                 else if(keepPlaying.equals("y") || keepPlaying.equals("Y")){
                     // TODO change dealer
                     game.reshuffle();
+
+                    System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+                    System.out.println("***************************************************************************");
+                    System.out.println("*                                                                         *");
+                    System.out.println("*                                                                         *");
+                    System.out.println("*                        NEW         GAME                                 *");
+                    System.out.println("*                                                                         *");
+                    System.out.println("*                                                                         *");
+                    System.out.println("***************************************************************************");
 
 
                     stillThinking = false;  

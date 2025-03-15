@@ -11,7 +11,7 @@ public class PlayerHand {
 
     public ArrayList<Card> playerHand;
 
-    public ArrayList<Card> checkTableCards = new ArrayList<>();
+    public ArrayList<Card> tableCards = new ArrayList<>();
 
     public ArrayList<Card> bestHand = new ArrayList<>();
 
@@ -95,16 +95,16 @@ public class PlayerHand {
 
     public void addFlopCards(ArrayList<Card> flopCards){
         for(Card flopCard : flopCards){
-            checkTableCards.add(flopCard);
+            tableCards.add(flopCard);
         }
     }
 
     public void addTurnCard(Card turnCard){
-        checkTableCards.add(turnCard);
+        tableCards.add(turnCard);
     }
 
     public void addRiverCard(Card riverCard){
-        checkTableCards.add(riverCard);
+        tableCards.add(riverCard);
     }
 
     /*
@@ -116,7 +116,7 @@ public class PlayerHand {
      *          Retrieval Methods
      */
     public ArrayList<Card> getCheckCardList(){
-        return checkTableCards;
+        return tableCards;
     }
     /*
      *          End Retrieval Methods
@@ -129,14 +129,16 @@ public class PlayerHand {
 
     public void clearHand(){
         playerHand.clear();
-        checkTableCards.clear();
+
+        tableCards.clear();
+
         bestHand.clear();
         // TODO: think about whether or not it should just instantiate a new 'PlayerHand'
     }
 
     public ArrayList<Card> sortCardsHighToLow(ArrayList<Card> list){
 
-        // will need to keep the current size as the temp will store the cards sorted in order from highest to lowest
+        // will need to keep the current size as the tempArr will store the cards sorted in order from highest to lowest
         int size = list.size();
 
         try{
@@ -169,30 +171,31 @@ public class PlayerHand {
 
         int numOfCardsOfSameSuit = 0;
 
-        ArrayList<Card> temp = new ArrayList<>();
+        ArrayList<Card> tempArr = new ArrayList<>();
 
         int lower = 0;
 
-        boolean handCardsAreSameSuit = false;
+        boolean playerCardsSameSuit = false;
         
         // Checks the players 2 hand cards to see if they're the same first, if not then it'll check the hand cards individually
         if(playerHand.get(0).getSuit() == playerHand.get(1).getSuit()){
             numOfCardsOfSameSuit = 2;
             lower = 1;
             for(Card card : playerHand){
-                temp.add(card);
+                tempArr.add(card);
             }
 
-            handCardsAreSameSuit = true;
+            playerCardsSameSuit = true;
         }
+
         // if the hand cards != eachother, and the table card size is 3, no flush is possible
-        else if(checkTableCards.size() < 4 && lower == 0){
+        else if(tableCards.size() < 4 && lower == 0){
             return false;
         }
 
-        if(temp.size()>1){
+        if(tempArr.size()>1){
             System.out.println("Before main check loop: ");
-            for(Card card : temp){
+            for(Card card : tempArr){
                 System.out.println("    " + card.getCardString());
             }
             System.out.println("");
@@ -204,43 +207,44 @@ public class PlayerHand {
         }
         System.out.println("\n");
 
-        // this will be the hand card that is getting checked, if they are both the same suit only one will get checked
+        // This will be the hand card that is getting checked, if they are both the same suit only one will get checked
         for(int handCard = lower; handCard < 2; handCard++){ 
 
-            Card firstCheckCard = playerHand.get(handCard);
-            if(!handCardsAreSameSuit){
-                temp.add(firstCheckCard);
+            Card firstHandCard = playerHand.get(handCard);
+
+            if(!playerCardsSameSuit){
+                tempArr.add(firstHandCard);
                 numOfCardsOfSameSuit++;
             }
 
-            for(int tableCardNum = 0; tableCardNum < checkTableCards.size(); tableCardNum++){
+            for(int tableCardNum = 0; tableCardNum < tableCards.size(); tableCardNum++){
                 
-                Card tableCard = checkTableCards.get(tableCardNum);
+                Card tableCard = tableCards.get(tableCardNum);
 
-                if(firstCheckCard.getSuit() == tableCard.getSuit()){
-                    if(firstCheckCard.getCardNum() == tableCard.getCardNum()){
+                if(firstHandCard.getSuit() == tableCard.getSuit()){
+                    if(firstHandCard.getCardNum() != tableCard.getCardNum()){
 
                     }
                     else{
                         numOfCardsOfSameSuit++;
-                        temp.add(tableCard);
+                        tempArr.add(tableCard);
                     }
                 }
             }
-            if(temp.size() < 5 || numOfCardsOfSameSuit < 5){
+            if(tempArr.size() < 5 || numOfCardsOfSameSuit < 5){
                 numOfCardsOfSameSuit = 0;
-                //System.out.println("temp Cleared");
+                //System.out.println("tempArr Cleared");
                 
-                temp.clear();
+                tempArr.clear();
                 break;
             }
         }
         if(numOfCardsOfSameSuit > 4){
 
-            temp = sortCardsHighToLow(temp);
+            tempArr = sortCardsHighToLow(tempArr);
 
             System.out.println("Before sorting: ");
-            for(Card card : temp){
+            for(Card card : tempArr){
                 System.out.print(card.getCardString() + "   ");
             }
             System.out.println();
@@ -248,10 +252,10 @@ public class PlayerHand {
             //TODO: check for str8 flush
             System.out.println("\nYou have a flush!");
             
-            if(temp.size() > 4){
+            if(tempArr.size() > 4){
                 for(int i = 0; i < 5; i++){
-                    bestHand.add(temp.get(i));
-                    System.out.print(" " + temp.get(i).getCardString() + "  ");
+                    bestHand.add(tempArr.get(i));
+                    System.out.print(" " + tempArr.get(i).getCardString() + "  ");
                 }
                 System.out.println();
 
@@ -262,15 +266,16 @@ public class PlayerHand {
                 System.out.println();
 
             }
-            temp.clear();
+            tempArr.clear();
             
+            // Does not need to check for pairs as the flush is superior
             checkForPairs = false;
 
             return true;
         }
 
         /*  Debug
-        for(Card card : temp){
+        for(Card card : tempArr){
             System.out.println(card.getCardString());
         }
         */
@@ -279,26 +284,26 @@ public class PlayerHand {
 
     public boolean checkHandForStr8(){
 
-        ArrayList<Card> temp = new ArrayList<>();
+        ArrayList<Card> tempArr = new ArrayList<>();
 
-        temp = sortCardsHighToLow(temp);
+        tempArr = sortCardsHighToLow(tempArr);
 
         boolean hasBestStr8 = false;
 
-        if(temp.size() > 5){
+        if(tempArr.size() > 5){
 
             // Goes backwards to check the last 5 (lowest) cards first because if the 3rd and 4th aren't in order, no str8 will be possible
             for(int highStr8Card = 2; highStr8Card > -1; highStr8Card--){
                 int firstCard = highStr8Card;
                 for(int i = 0; i < 4; i++){
-                    if(temp.get(firstCard).getCardNum() != temp.get(firstCard + 1).getCardNum()){
+                    if(tempArr.get(firstCard).getCardNum() != tempArr.get(firstCard + 1).getCardNum()){
                         if(highStr8Card == 2){
                             checkForStraight = false;
                             return false;
                         } 
                         break; 
                     }
-                    else if(temp.get(firstCard).getCardNum() == temp.get(firstCard + 1).getCardNum()){
+                    else if(tempArr.get(firstCard).getCardNum() == tempArr.get(firstCard + 1).getCardNum()){
                         firstCard++;
                     }
                     System.out.println(i);
@@ -306,7 +311,7 @@ public class PlayerHand {
             }
 
         }
-        else if(temp.size() == 5){
+        else if(tempArr.size() == 5){
 
         }
         
@@ -316,7 +321,7 @@ public class PlayerHand {
 
     public void checkCards(){
 
-        //checkTableCards = playerHand;
+        //tableCards = playerHand;
 
         if(checkForFlush && !hasFlush){
             hasFlush = checkHandForFlush();
