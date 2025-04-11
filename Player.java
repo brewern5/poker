@@ -109,7 +109,19 @@
     public void checkCards(){
         checkHand.checkCards();
     }
+
+    /*
+     * 
+     *          DEBUG
+     * 
+     */
  
+    public void overWritePlayerHand(){
+        checkHand.overWritePlayerHand();
+    }
+    public void addToPlayerHand(Card card){
+        checkHand.addToPlayerHand(card);
+    }
 
 
 }

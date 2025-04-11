@@ -10,7 +10,7 @@ public class main {
 
         boolean gameIsOn = true;
 
-        int numOfPlayers = 3;
+        int numOfPlayers = 1;
         //creates the game
         pokerGame game = new pokerGame(numOfPlayers, 100);
 
@@ -25,8 +25,7 @@ public class main {
         // Game starts and players are dealt cards
         while(gameIsOn){
 
-            // TODO Add a card handler to determine and show the actual card values
-
+            
             for (Player player : currentPlayers) {
                 //deal two cards
                 player.dealCards(game.dealCards());
@@ -34,10 +33,14 @@ public class main {
 
                 player.createHand();
 
+                //player.overWritePlayerHand();
 
+                //player.addToPlayerHand(game.addDefiniteCard(0));
+                //player.addToPlayerHand(game.addDefiniteCard(16));
 
                 System.out.println("\nPlayer: " + player.getPlayerNum() +" cards: " + player.getCards().get(0).getCardString() + "    " + player.getCards().get(1).getCardString());
             }
+            
 
             //  Tells what card the user has
             System.out.println("\nYou have:  ");
@@ -83,6 +86,13 @@ public class main {
 
             // Adds the flop cards to a hidden player deck to check the cards early on
             for(Player player : currentPlayers){
+
+                /* 
+                player.addToPlayerHand(game.addDefiniteCard(2));
+                player.addToPlayerHand(game.addDefiniteCard(3));
+                player.addToPlayerHand(game.addDefiniteCard(24));
+                */
+
                 player.addFlopCards(flopCards);
                 player.checkCards();
             }
@@ -113,13 +123,16 @@ public class main {
 
             // reveal the Turn card
             Card turn = game.turn();
-            System.out.println("The turn card is: ");
+            System.out.println("The Turn card is: ");
             System.out.println("    " + turn.getCardString());
             for (Player player : currentPlayers){
+
+                //player.addToPlayerHand(game.addDefiniteCard(5));
+                
                 player.addTurnCard(turn);
                 player.checkCards();
             }
-
+            System.out.println();
 
             System.out.println("Table Cards");
             for(Card card : flopCards){
@@ -159,6 +172,9 @@ public class main {
             System.out.println("The river card is: ");
             System.out.println("    " + river.getCardString());
             for (Player player : currentPlayers){
+
+                //player.addToPlayerHand(game.addDefiniteCard(6));
+                
                 player.addRiverCard(river);
                 player.checkCards();
             }

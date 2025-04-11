@@ -41,4 +41,16 @@ public class Deck {
             System.out.println(card.getCardString());
         }
     }
+
+    /*
+     * 
+     *      DEBUG
+     * 
+     */
+    public Card getDefinateCards(int cardNum){
+        
+        Card card = playDeck.get(cardNum);
+
+        return card;
+    }
 }

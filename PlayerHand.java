@@ -1,6 +1,6 @@
 /*
- *      Holds all the cards and functions for each players hands
  *      
+ *          Holds all the cards and functions for each players hands
  * 
  */
 
@@ -59,8 +59,13 @@ public class PlayerHand {
 
     public boolean checkForFour = false;
 
-    // this will be the highest card in the hand (Ace will be handled diffreently since ace can be high and low)
+    // This will be the highest card in the hand (Ace will be handled diffreently since ace can be high and low)
     public Card kicker;
+
+    // Found in the check for flush Checker
+    boolean playerCardsSameSuit = false;
+    int numOfCardsOfSameSuit = 0;
+    ArrayList<Card> flushTempArr = new ArrayList<>();
 
 
     /*
@@ -169,39 +174,32 @@ public class PlayerHand {
 
     public boolean checkHandForFlush(){
 
-        int numOfCardsOfSameSuit = 0;
-
-        ArrayList<Card> tempArr = new ArrayList<>();
-
         int lower = 0;
 
-        boolean playerCardsSameSuit = false;
+        if(numOfCardsOfSameSuit > 1){
+            lower = 1;
+        }
         
         // Checks the players 2 hand cards to see if they're the same first, if not then it'll check the hand cards individually
-        if(playerHand.get(0).getSuit() == playerHand.get(1).getSuit()){
-            numOfCardsOfSameSuit = 2;
-            lower = 1;
-            for(Card card : playerHand){
-                tempArr.add(card);
+        if(!playerCardsSameSuit){
+            if(playerHand.get(0).getSuit() == playerHand.get(1).getSuit()){
+                numOfCardsOfSameSuit = 2;
+                lower = 1;
+                for(int i = 0; i < 2; i++){
+                    flushTempArr.add(playerHand.get(i));
+                }
+                playerCardsSameSuit = true;
             }
-
-            playerCardsSameSuit = true;
         }
-
         // if the hand cards != eachother, and the table card size is 3, no flush is possible
-        else if(tableCards.size() < 4 && lower == 0){
+        else if(tableCards.size() < 4){
             return false;
         }
-
-        if(tempArr.size()>1){
-            System.out.println("Before main check loop: ");
-            for(Card card : tempArr){
-                System.out.println("    " + card.getCardString());
-            }
-            System.out.println("");
+        else{
+            numOfCardsOfSameSuit = 2;
         }
 
-        System.out.println("PlayerHand");
+        System.out.println("\nPlayerHand");
         for(Card card : playerHand){
             System.out.print(" "+card.getCardString() + "   ");
         }
@@ -213,61 +211,88 @@ public class PlayerHand {
             Card firstHandCard = playerHand.get(handCard);
 
             if(!playerCardsSameSuit){
-                tempArr.add(firstHandCard);
+                flushTempArr.add(firstHandCard);
                 numOfCardsOfSameSuit++;
             }
 
+            //for(int tableCardNum = 0; tableCardNum < playerHand.size()-2; tableCardNum++){
+
             for(int tableCardNum = 0; tableCardNum < tableCards.size(); tableCardNum++){
-                
+
+                // TODO : This may be where the Flush issue stems from
                 Card tableCard = tableCards.get(tableCardNum);
+
+
+                System.out.println("\n Table Card first check " + tableCard.getCardString() + "\n");
+
+                //Card tableCard = playerHand.get(2 + tableCardNum);
 
                 if(firstHandCard.getSuit() == tableCard.getSuit()){
                     if(firstHandCard.getCardNum() != tableCard.getCardNum()){
-
-                    }
-                    else{
                         numOfCardsOfSameSuit++;
-                        tempArr.add(tableCard);
+                        flushTempArr.add(tableCard);
+                        System.out.println(tableCard.getCardString());
                     }
                 }
             }
-            if(tempArr.size() < 5 || numOfCardsOfSameSuit < 5){
-                numOfCardsOfSameSuit = 0;
-                //System.out.println("tempArr Cleared");
+
+            System.out.println("\n Flush temp array mid check");
+            for(Card card : flushTempArr){
+                System.out.println(card.getCardString());
+            }
+            System.out.println();
+
+            if(flushTempArr.size() < 5 || numOfCardsOfSameSuit < 5){
                 
-                tempArr.clear();
+                if(playerCardsSameSuit){
+                    numOfCardsOfSameSuit = 2;
+                    flushTempArr.clear();
+                    flushTempArr.add(playerHand.get(0));
+                    flushTempArr.add(playerHand.get(1));
+                }
+                else{
+                    numOfCardsOfSameSuit = 0;
+                    flushTempArr.clear();
+                }
                 break;
             }
         }
         if(numOfCardsOfSameSuit > 4){
 
-            tempArr = sortCardsHighToLow(tempArr);
+            System.out.println("Flush Temp Array if has 5 cards");
+            for (Card card : flushTempArr) {
+                System.out.println(card.getCardString());
+            }
 
+            flushTempArr = sortCardsHighToLow(flushTempArr);
+
+            /* 
             System.out.println("Before sorting: ");
-            for(Card card : tempArr){
+            for(Card card : flushTempArr){
                 System.out.print(card.getCardString() + "   ");
             }
             System.out.println();
+            */
 
             //TODO: check for str8 flush
-            System.out.println("\nYou have a flush!");
+            System.out.println("You have a flush!");
             
-            if(tempArr.size() > 4){
+            if(flushTempArr.size() > 4){
                 for(int i = 0; i < 5; i++){
-                    bestHand.add(tempArr.get(i));
-                    System.out.print(" " + tempArr.get(i).getCardString() + "  ");
+                    bestHand.add(flushTempArr.get(i));
+                    System.out.print(" " + flushTempArr.get(i).getCardString() + "  ");
                 }
-                System.out.println();
+                System.out.println("\n");
 
-                System.out.println("\nAfter sorting: ");
-                for(Card card : bestHand){
-                    System.out.print(card.getCardString() + "   ");
-                }
-                System.out.println();
-
+                /*
+                //System.out.println("\nAfter sorting: ");
+                //for(Card card : bestHand){
+                //    System.out.print(card.getCardString() + "   ");
+                //}
+                //System.out.println();
+                */
             }
-            tempArr.clear();
-            
+
             // Does not need to check for pairs as the flush is superior
             checkForPairs = false;
 
@@ -331,5 +356,23 @@ public class PlayerHand {
         }
 
     }
+
+
+    /*
+     * 
+     *          DEBUG
+     * 
+     */
+
+
+
+     public void overWritePlayerHand(){
+        playerHand.clear();
+     }
+
+     public void addToPlayerHand(Card card){
+        playerHand.add(card);
+     }
+
 
 }

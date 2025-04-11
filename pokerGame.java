@@ -155,4 +155,15 @@ public class pokerGame {
         // TODO: Handle card values for a 'winning hand' 
         
     }
+
+
+    /*
+     * 
+     *          DEBUG
+     * 
+     */
+
+     public Card addDefiniteCard(int i){
+        return gameDeck.getDefinateCards(i);
+     }
 }
